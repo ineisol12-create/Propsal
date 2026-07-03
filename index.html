@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Will You Be My Girlfriend?</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #ffe5ec, #ffc2d1);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+        }
+
+        .container {
+            text-align: center;
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            max-width: 450px;
+            width: 90%;
+            position: relative;
+            z-index: 2;
+        }
+
+        .main-photo-container img {
+            width: 100%;
+            max-height: 320px;
+            object-fit: cover;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+        }
+
+        h1 {
+            color: #ff4d6d;
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            padding: 0 10px;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            height: 50px;
+            position: relative;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.2s;
+        }
+
+        #yesBtn {
+            background-color: #ff4d6d;
+            color: white;
+        }
+
+        #yesBtn:hover {
+            background-color: #ff758f;
+            transform: scale(1.1);
+        }
+
+        #noBtn {
+            background-color: #e0e0e0;
+            color: #333;
+            position: absolute;
+            right: 50px;
+        }
+
+        /* Gift Box Styles */
+        .gift-box {
+            font-size: 80px;
+            cursor: pointer;
+            display: inline-block;
+            transition: transform 0.3s;
+            animation: bounce 1s infinite alternate;
+            margin: 20px 0;
+        }
+
+        .gift-box:hover {
+            transform: scale(1.2);
+        }
+
+        @keyframes bounce {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-10px); }
+        }
+
+        /* Photo Gallery Burst Styles */
+        .photo-gallery {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 20px;
+            max-height: 420px;
+            overflow-y: auto;
+            padding: 5px;
+        }
+
+        /* Custom Scrollbar */
+        .photo-gallery::-webkit-scrollbar {
+            width: 6px;
+        }
+        .photo-gallery::-webkit-scrollbar-thumb {
+            background-color: #ffc2d1;
+            border-radius: 10px;
+        }
+
+        /* Cute Pop Burst Animation for Pictures 2-8 */
+        .photo-gallery img {
+            width: 100%;
+            height: 150px;
+            object-fit: contain;
+            background-color: #fff0f3;
+            border-radius: 10px;
+            border: 3px solid #fff;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            animation: burstIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            opacity: 0;
+            transform: scale(0.3);
+        }
+
+        /* Staggered burst delays */
+        .photo-gallery img:nth-child(1) { animation-delay: 0.1s; }
+        .photo-gallery img:nth-child(2) { animation-delay: 0.2s; }
+        .photo-gallery img:nth-child(3) { animation-delay: 0.3s; }
+        .photo-gallery img:nth-child(4) { animation-delay: 0.4s; }
+        .photo-gallery img:nth-child(5) { animation-delay: 0.5s; }
+        .photo-gallery img:nth-child(6) { animation-delay: 0.6s; }
+        .photo-gallery img:nth-child(7) { animation-delay: 0.7s; }
+
+        @keyframes burstIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.3) rotate(-10deg);
+            }
+            70% {
+                transform: scale(1.05) rotate(3deg);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) rotate(0deg);
+            }
+        }
+
+        /* Continuous Floating Hearts */
+        .heart {
+            position: absolute;
+            color: #ff4d6d;
+            font-size: 24px;
+            pointer-events: none;
+            z-index: 10;
+            animation: floatUp linear forwards;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) scale(0.8) rotate(0deg);
+                opacity: 1;
+            }
+            50% {
+                transform: translateY(-120px) scale(1.2) rotate(15deg);
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(-280px) scale(1.5) rotate(-15deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="mainContainer">
+        <div class="main-photo-container">
+            <img src="a7913be00389c93a31b56efe4a579759.jpg" alt="Proposal Proposal Banner">
+        </div>
+        
+        <h1 id="question">Will you be my girlfriend? 💖</h1>
+
+        <div class="buttons" id="btnContainer">
+            <button class="btn" id="yesBtn" onclick="showGift()">Yes!</button>
+            <button class="btn" id="noBtn" onmouseover="moveNoButton()">No</button>
+        </div>
+    </div>
+
+    <script>
+        function moveNoButton() {
+            const noBtn = document.getElementById('noBtn');
+            const container = document.getElementById('btnContainer');
+            
+            const containerWidth = container.clientWidth;
+            const containerHeight = container.clientHeight;
+            
+            const randomX = Math.floor(Math.random() * (containerWidth - noBtn.clientWidth));
+            const randomY = Math.floor(Math.random() * (containerHeight + 60)) - 30;
+            
+            noBtn.style.left = randomX + 'px';
+            noBtn.style.top = randomY + 'px';
+        }
+
+        // Step 1: Show the Gift Box
+        function showGift() {
+            const container = document.getElementById('mainContainer');
+            container.innerHTML = `
+                <h1>Yay! 🥰 I have a surprise for you...</h1>
+                <p style="color: #666; margin-bottom: 10px;">Tap the gift box to open it!</p>
+                <div class="gift-box" onclick="openGift(event)">🎁</div>
+            `;
+        }
+
+        // Step 2: Open Gift, Spawn Exploding Hearts & Pictures 2-8
+        function openGift(event) {
+            // Burst a heavy amount of initial hearts right away
+            for (let i = 0; i < 30; i++) {
+                createHeart(event.clientX, event.clientY);
+            }
+
+            // Keep shooting up scattered hearts continuously for a festive look
+            const heartInterval = setInterval(() => {
+                const randomX = window.innerWidth / 2 + (Math.random() * 260 - 130);
+                const randomY = window.innerHeight / 2 + 120;
+                createHeart(randomX, randomY);
+            }, 100);
+
+            // Stop generating new hearts after 6 seconds
+            setTimeout(() => {
+                clearInterval(heartInterval);
+            }, 6000);
+
+            const container = document.getElementById('mainContainer');
+            container.innerHTML = `
+                <h1 style="margin-bottom: 15px;">I love you! ❤️</h1>
+                
+                <div class="photo-gallery">
+                    <img src="10e9178ccb1e2c1d8fec7e02eff9c55d.jpg" alt="To my favourite girl">
+                    <img src="c4d5bbc67481bda6d9c3501744075814.jpg" alt="Flowers for you">
+                    <img src="9f6c01a9777006f8e846bb5a0832ad70.jpg" alt="I love you cat">
+                    <img src="12aa1c2cfce03f5fb8107d041700bc22.jpg" alt="Heart eyes cat">
+                    <img src="758b8a699eacd8595fc409405a7f109b.jpg" alt="Dancing cats">
+                    <img src="367ddc9b5397b683fd480febfe334301.jpg" alt="Thinking of you">
+                    <img src="83a94a98f573a87d0f9cfc5fbf6174bd.jpg" alt="I wanna kiss you">
+                </div>
+            `;
+        }
+
+        function createHeart(x, y) {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.innerHTML = '❤️';
+            
+            // Randomize heart dimensions
+            const size = Math.floor(Math.random() * 15) + 18; 
+            heart.style.fontSize = size + 'px';
+            
+            heart.style.left = (x - 10 + (Math.random() * 80 - 40)) + 'px';
+            heart.style.top = (y - 10 + (Math.random() * 80 - 40)) + 'px';
+            
+            const duration = (Math.random() * 0.8) + 1.2; 
+            heart.style.animationDuration = duration + 's';
+            
+            document.body.appendChild(heart);
+            
+            setTimeout(() => {
+                heart.remove();
+            }, duration * 1000);
+        }
+    </script>
+
+</body>
+</html>
+
